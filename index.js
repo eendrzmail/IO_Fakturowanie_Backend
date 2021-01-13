@@ -4,6 +4,9 @@ cors = require('cors');
 app = express();
 bodyParser= require('body-parser');
 
+var distDir = __dirname;
+app.use(express.static(distDir));
+
 const port= process.env.PORT || 3000;
 
 //załadowanie routerów
@@ -19,7 +22,6 @@ app.use(bodyParser.raw());
 //dodanie routerów do serwera
 app.use(kontrahenci);
 app.use(faktury);
-
 
 
 
