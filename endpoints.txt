@@ -1,0 +1,7 @@
+:3000/faktury/nr_faktury="202012155268"
+
+:3000/api/faktury/?nip=12&Data_od=""&Data_do=""
+przykład:
+/api/faktury/?nip=1234567895&Data_od="2020-12-10"&Data_do="2020-12-15"
+http://localhost:3000/api/faktury/?nip=1234567895&Data_od=%222020-12-14%22&Data_do=%222020-12-15%22
+

@@ -411,7 +411,127 @@ router.get("/faktury", (req,res) => {
     //res.send(a);
 });
 
+router.get("/api/faktury", (req,res) => {
+    if (req.query.nip && req.query.Data_od && req.query.Data_do) {
 
+        console.log('Zapytanie o fakture');
+        const sql1 = `Select * from fakturyponip where nip=${req.query.nip} and data_wystawienia between ${req.query.Data_od} and ${req.query.Data_do}`;
+        console.log(sql1);
+
+        request(sql1).then(nipfaktury => {
+
+            if (nipfaktury.length==0){
+                res.send([]);
+                return;
+            }
+
+            let zlozfaktury=nipfaktury;
+            let counter=0;
+
+            for (let f of zlozfaktury){
+
+                let t_arr=[];
+                let nsqlkupujacy="SELECT * FROM kontrahenci where id_kontrahent="+f.id_kupujacy;
+                let nsqlsprzedajacy="SELECT * from kontrahenci where id_kontrahent=1";
+                //console.log(nsqlkupujacy);
+
+                t_arr.push(request(nsqlkupujacy));
+                t_arr.push(request(nsqlsprzedajacy));
+
+                
+
+                Promise.all(t_arr).then(kontr => {
+                    //console.dir(kontr);
+                    f=Object.assign(f,{"kupujacy":kontr[0][0]});
+                    f=Object.assign(f,{"sprzedajacy":kontr[1][0]});
+                    counter++;
+
+                    if (counter==nipfaktury.length){
+                        assignwiersze(nipfaktury);
+                    }
+                    //console.log("assigned");
+                })
+                
+            }  
+            //console.log("after for")
+            
+
+
+        })
+        function assignwiersze(faktury){
+            let counter=0;
+            //console.dir(faktury);
+
+            for (let f of faktury){
+                let wierszsql="SELECT * from wiersze_faktury where id_faktury="+f.id_faktura;
+
+                request(wierszsql).then(wiersze => {
+                    counter++;
+
+                    wiersze=wiersze.map(w => {
+                        return {
+                            "produkt": {
+                                "nazwa":w.nazwa,
+                                "jednostka": w.jednostka,
+                                "wartosc_VAT": w.vat,
+                                "cena_netto": w.cena_netto
+                            },
+                            "ilosc":w.ilosc
+                        }
+                    })
+                    f=Object.assign(f,{
+                        "wiersze":wiersze});
+
+                    if (counter==faktury.length){
+                        sendfaktury(faktury);
+                    }
+                })
+
+            }
+
+        }
+
+        function sendfaktury(faktury){
+            /*
+            for (let f of faktury) {
+                // usunac zbedne atrybuty
+                delete f.nazwa;
+                delete f.adres;
+                delete f.NIP;
+                delete f.id_faktura;
+                delete f.id_kupujacy;
+                delete f.id_sprzedajacy;
+                delete f.id_kontrahent;
+            }
+            */
+            let form = faktury.map(f => {
+                let sum_arr=f.wiersze.map(w => {
+                    return w.produkt.cena_netto+(w.produkt.cena_netto*w.produkt.wartosc_VAT/100);
+                })
+                //console.dir(sum_arr);
+                let sum = sum_arr.reduce((pr,cr) => {return pr+cr});
+
+                return {
+                    ID:f.id_faktura,
+                    Numer_faktury:f.nr_faktury,
+                    NIP:f.NIP,
+                    Status:f.status,
+                    Data_platnosci:f.data_platnosci,
+                    Wartosc_faktury_brutto:+sum.toFixed(2)
+                }
+            })
+            
+            
+            res.send(form);
+        }
+
+
+    }
+    else{
+        res.status(500);
+        res.send();
+    }
+})
 
 
 
