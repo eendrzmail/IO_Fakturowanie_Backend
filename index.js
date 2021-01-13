@@ -4,7 +4,7 @@ cors = require('cors');
 app = express();
 bodyParser= require('body-parser');
 
-const port=3000;
+const port= process.env.PORT || 3000;
 
 //załadowanie routerów
 kontrahenci= require('./routes/kontrahenci');
