@@ -550,13 +550,13 @@ router.post("/faktury", (req,res) => {
     //VALUES ('2', '1', '2020-11-27', '2020-11-11', 'done', 'karta', '2020-11-12');
 
     let data_wystawienia=new Date(faktura.data_wystawienia);
-    let data_wystawienia_str= data_wystawienia.getFullYear()+'-'+(+data_wystawienia.getMonth()+1)+'-'+data_wystawienia.getDate();
+    let data_wystawienia_str= data_wystawienia.getFullYear()+'-'+(+data_wystawienia.getMonth()+1)+'-'+(+data_wystawienia.getDate()+1);
 
     let data_sprzedazy=new Date(faktura.data_sprzedazy);
-    let data_sprzedazy_str= data_sprzedazy.getFullYear()+'-'+(+data_sprzedazy.getMonth()+1)+'-'+data_sprzedazy.getDate();
+    let data_sprzedazy_str= data_sprzedazy.getFullYear()+'-'+(+data_sprzedazy.getMonth()+1)+'-'+(+data_sprzedazy.getDate()+1);
 
     let data_platnosci=new Date(faktura.data_platnosci);
-    let data_platnosci_str= data_platnosci.getFullYear()+'-'+(+data_platnosci.getMonth()+1)+'-'+data_platnosci.getDate();
+    let data_platnosci_str= data_platnosci.getFullYear()+'-'+(+data_platnosci.getMonth()+1)+'-'+(+data_platnosci.getDate()+1);
 
     
     //console.dir(faktura);
@@ -578,6 +578,7 @@ router.post("/faktury", (req,res) => {
         generatenr+=Math.round(new Date().getTime()%10000)+"";
         //data_wystawienia_str+'-'+Math.round(Math.random()*1000);
 
+        //dodaj fakture
         let sqlfakturak= "INSERT INTO `faktury` (`id_kupujacy`, `id_sprzedajacy`, `data_wystawienia`, `data_sprzedazy`, `status`, `forma_platnosci`, `data_platnosci`, `nr_faktury`)";
         let sqlfakturav=              ` VALUES ('${kupujacy_id}', '${faktura.sprzedajacy.id_kontrahent}','${data_wystawienia_str}', '${data_sprzedazy_str}', '${faktura.status}', '${faktura.forma_platnosci}', '${data_platnosci_str}', '${generatenr}' )`
         //console.log(sqlfakturak+sqlfakturav);
