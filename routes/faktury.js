@@ -66,7 +66,7 @@ router.get("/faktury", (req,res) => {
 
                 //console.dir(val1);
                 const sqlsprzedajacy = `Select * from kontrahenci where id_kontrahent=1`;
-                const sqlkupujacy = `Select * from kontrahenci where id_kontrahent=${val1[0].id_sprzedajacy}`;
+                const sqlkupujacy = `Select * from kontrahenci where id_kontrahent=${val1[0].id_kupujacy}`;
                 //console.log("poskladaj")
 
                 const sprzedajacytab = request(sqlsprzedajacy);     //get sprzedajacy
