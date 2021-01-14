@@ -565,7 +565,7 @@ router.post("/faktury", (req,res) => {
     let sqlkupujacy=`Select * from kontrahenci where id_kontrahent=${faktura.kupujacy.id_kontrahent}`;
     if (!faktura.kupujacy.id_kontrahent) {
         //INSERT INTO `fakturowanie`.`kontrahenci` (`nazwa`, `adres`, `nip`) VALUES ('Lokalna3', 'Tarnów', '9991112223');
-        sqlkupujacy = "INSERT INTO `fakturowanie`.`kontrahenci` (`nazwa`, `adres`, `NIP`) VALUES "+`('${faktura.kupujacy.nazwa}','${faktura.kupujacy.adres}','${faktura.kupujacy.NIP}')`;
+        sqlkupujacy = "INSERT INTO `kontrahenci` (`nazwa`, `adres`, `NIP`) VALUES "+`('${faktura.kupujacy.nazwa}','${faktura.kupujacy.adres}','${faktura.kupujacy.NIP}')`;
     }
     request(sqlkupujacy).then(kontrahent => {
         //console.log(kontrahent.insertId);
@@ -577,7 +577,7 @@ router.post("/faktury", (req,res) => {
         generatenr+=Math.round(new Date().getTime()%10000)+"";
         //data_wystawienia_str+'-'+Math.round(Math.random()*1000);
 
-        let sqlfakturak= "INSERT INTO `fakturowanie`.`faktury` (`id_kupujacy`, `id_sprzedajacy`, `data_wystawienia`, `data_sprzedazy`, `status`, `forma_platnosci`, `data_platnosci`, `nr_faktury`)";
+        let sqlfakturak= "INSERT INTO `faktury` (`id_kupujacy`, `id_sprzedajacy`, `data_wystawienia`, `data_sprzedazy`, `status`, `forma_platnosci`, `data_platnosci`, `nr_faktury`)";
         let sqlfakturav=              ` VALUES ('${kupujacy_id}', '${faktura.sprzedajacy.id_kontrahent}','${data_wystawienia_str}', '${data_sprzedazy_str}', '${faktura.status}', '${faktura.forma_platnosci}', '${data_platnosci_str}', '${generatenr}' )`
         //console.log(sqlfakturak+sqlfakturav);
         console.log("dodano fakture");
@@ -587,7 +587,7 @@ router.post("/faktury", (req,res) => {
             console.log(generatenr);
 
             for (wiersz of faktura.wiersze){
-                let sqlwiersz = "insert into `fakturowanie`.`wiersze_faktury` (`id_faktury`, `nazwa`, `jednostka`, `ilosc`, `cena_netto`, `vat`) VALUES ";
+                let sqlwiersz = "insert into `wiersze_faktury` (`id_faktury`, `nazwa`, `jednostka`, `ilosc`, `cena_netto`, `vat`) VALUES ";
                 sqlwiersz+= `( '${f.insertId}' , '${wiersz.produkt.nazwa}', '${wiersz.produkt.jednostka}', '${wiersz.ilosc}', '${wiersz.produkt.cena_netto}','${wiersz.produkt.wartosc_VAT}' )`;
                 
                 //console.log(sqlwiersz);
@@ -653,7 +653,7 @@ router.put("/faktury", (req,res) => {
                 let t_w=[];
 
                 for (wiersz of faktura.wiersze){
-                    let sqlwiersz = "insert into `fakturowanie`.`wiersze_faktury` (`id_faktury`, `nazwa`, `jednostka`, `ilosc`, `cena_netto`, `vat`) VALUES ";
+                    let sqlwiersz = "insert into `wiersze_faktury` (`id_faktury`, `nazwa`, `jednostka`, `ilosc`, `cena_netto`, `vat`) VALUES ";
                     sqlwiersz+= `( '${id}' , '${wiersz.produkt.nazwa}', '${wiersz.produkt.jednostka}', '${wiersz.ilosc}', '${wiersz.produkt.cena_netto}','${wiersz.produkt.wartosc_VAT}' )`;
 
                     t_w.push(request(sqlwiersz));
