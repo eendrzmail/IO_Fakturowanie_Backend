@@ -65,7 +65,7 @@ router.get("/faktury", (req,res) => {
                 console.log("Przypisywanie kontrahentow");
 
                 const sqlsprzedajacy = `Select * from kontrahenci where id_kontrahent=1`;
-                const sqlkupujacy = `Select * from kontrahenci where id_kontrahent=2`;
+                const sqlkupujacy = `Select * from kontrahenci where id_kontrahent=${val1.id_kupujacy}`;
                 //console.log("poskladaj")
 
                 const sprzedajacytab = request(sqlsprzedajacy);     //get sprzedajacy
