@@ -507,7 +507,7 @@ router.get("/api/faktury", (req,res) => {
             */
             let form = faktury.map(f => {
                 let sum_arr=f.wiersze.map(w => {
-                    return w.produkt.cena_netto+(w.produkt.cena_netto*w.produkt.wartosc_VAT/100);
+                    return w.produkt.cena_netto+(w.produkt.cena_netto*w.produkt.wartosc_VAT/100)*w.ilosc;
                 })
                 //console.dir(sum_arr);
                 let sum = sum_arr.reduce((pr,cr) => {return pr+cr});
