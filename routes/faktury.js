@@ -516,7 +516,7 @@ router.get("/api/faktury", (req,res) => {
                     ID:f.id_faktura,
                     Numer_faktury:f.nr_faktury,
                     NIP:f.NIP,
-                    Status:f.status,
+                    Status:f.data_platnosci=="0000-00-00"?"Nie Oplacona":"Oplacona",
                     Data_platnosci:f.data_platnosci,
                     Wartosc_faktury_brutto:+sum.toFixed(2)
                 }
