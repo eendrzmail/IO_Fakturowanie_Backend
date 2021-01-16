@@ -563,7 +563,7 @@ router.post("/faktury", (req,res) => {
 
     // DODAJ KONTRAHENTA JESLI NIE MA
     let kupujacy_id=faktura.kupujacy.id_kontrahent;
-    let sqlkupujacy=`Select * from kontrahenci where id_kontrahent=${faktura.kupujacy.id_kontrahent}`;
+    let sqlkupujacy=`Select * from kontrahenci where NIP=${faktura.kupujacy.id_kontrahent}`;
     if (!faktura.kupujacy.id_kontrahent) {
         //INSERT INTO `fakturowanie`.`kontrahenci` (`nazwa`, `adres`, `nip`) VALUES ('Lokalna3', 'Tarnów', '9991112223');
         sqlkupujacy = "INSERT INTO `kontrahenci` (`nazwa`, `adres`, `NIP`) VALUES "+`('${faktura.kupujacy.nazwa}','${faktura.kupujacy.adres}','${faktura.kupujacy.NIP}')`;
